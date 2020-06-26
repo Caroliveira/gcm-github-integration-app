@@ -1,0 +1,44 @@
+.header {
+  display: flex;
+  align-items: center;
+  background-color: black !important;
+  padding-top: 20px;
+  margin-bottom: 20px;
+}
+
+.logo {
+  height: auto;
+  width: 300px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer {
+  width: 100%;
+  bottom: 0;
+  position: fixed;
+  padding: 15px;
+  border-top: 1px solid gray;
+  display: flex;
+  align-items: center;
+  background-color: lightgray;
+}
+
+.caroliveira {
+  height: 30px;
+  width: auto;
+  font: 50px 'Inconsolata', monospace;
+  margin: 0 5px;
+}
+
+.PrivateTabIndicator-root-1 {
+  height: 5px !important;
+}
+
+.PrivateTabIndicator-colorSecondary-3 {
+  background-color: dodgerblue !important;
+}
