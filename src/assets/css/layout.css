@@ -3,7 +3,6 @@
   align-items: center;
   background-color: black !important;
   padding-top: 20px;
-  margin-bottom: 50px;
 }
 
 .logo {
@@ -11,20 +10,15 @@
   width: 300px;
 }
 
-.content {
-  display: flex;
-  justify-content: center;
-}
-
 .footer {
   width: 100%;
   bottom: 0;
   position: fixed;
   padding: 15px;
-  border-top: 1px solid gray;
+  border-top: 1px solid lightgray;
   display: flex;
   align-items: center;
-  background-color: lightgray;
+  background-color: white;
 }
 
 .caroliveira {

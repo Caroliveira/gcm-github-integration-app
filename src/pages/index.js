@@ -8,9 +8,8 @@ class Home extends Component {
   state = { selected: "Git" };
   render() {
     const { selected } = this.state;
-    console.log(selected === "Git" ? true : false);
     return (
-      <>
+      <div className="full-page">
         <AppBar position="static" className="header">
           <img className="logo" src="/gcm-logo.png" alt="GCM logo" />
           <Tabs
@@ -22,7 +21,7 @@ class Home extends Component {
             <Tab value="Saved" id="Saved" label="Saved Repositories" />
           </Tabs>
         </AppBar>
-        <div className="content">{selected === "Git" ? <GitRepositories /> : <SavedRepositories />}</div>
+        {selected === "Git" ? <GitRepositories /> : <SavedRepositories />}
         <footer className="footer">
           Desenvolvido por
           <a href="https://caroliveira.herokuapp.com/">
@@ -33,7 +32,7 @@ class Home extends Component {
             />
           </a>
         </footer>
-      </>
+      </div>
     );
   }
 }
