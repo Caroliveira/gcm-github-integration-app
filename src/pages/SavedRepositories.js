@@ -1,15 +1,21 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
 import tableDefaults from "../utils/tableDefaults";
-import { Box } from "@material-ui/core";
+import styles from "../assets/css/pages.css";
 import { getRepositories } from "../services";
+import { Alert } from "@material-ui/lab";
+import { Box, Snackbar, withStyles } from "@material-ui/core";
 
-export default class SavedRepositories extends Component {
+class SavedRepositories extends Component {
   state = {
-    repositories: []
-  }
+    repositories: [],
+    errorMessage: "",
+  };
   async componentDidMount() {
-    this.setState({ repositories: await getRepositories() });
+    const repositories = await getRepositories();
+    repositories.message
+      ? this.setState({ errorMessage: repositories.message })
+      : this.setState({ repositories: repositories });
   }
   table() {
     const { repositories } = this.state;
@@ -19,17 +25,37 @@ export default class SavedRepositories extends Component {
         title={"Repositórios salvos"}
         columns={[{ title: "Nome", field: "name" }]}
         data={repositories}
-        style={{ width: "100%", maxWidth: "900px" }}
       />
     );
   }
   render() {
+    const { errorMessage, repositories } = this.state;
     return (
       <>
         <Box display="flex" justifyContent="center" className="sim">
-          {this.table()}
+          {repositories.length === 0 ? (
+            <p className="main-text">
+              Não há repositórios salvos =C
+            </p>
+          ) : (
+            this.table()
+          )}
         </Box>
+        <Snackbar
+          open={errorMessage !== ""}
+          autoHideDuration={6000}
+          onClose={() => this.setState({ errorMessage: "" })}
+        >
+          <Alert
+            onClose={() => this.setState({ errorMessage: "" })}
+            severity="error"
+          >
+            {errorMessage}
+          </Alert>
+        </Snackbar>
       </>
     );
   }
 }
+
+export default withStyles(styles)(SavedRepositories)

@@ -20,7 +20,7 @@ export async function saveRepository(repo) {
     const res = await axios.post(`${base}/repositories`, repo, {
       headers: { Accept: "application/json" },
     });
-    return res.data;
+    return res.status? errorHandler(res.status) : res.data;
   } catch (error) {
     return {
       status: error.response.status,
@@ -32,7 +32,7 @@ export async function saveRepository(repo) {
 function errorHandler(err) {
   const errors = {
     401: "Não autorizado",
-    403: "Proibido",
+    403: "Respositório já está salvo.",
     404: "Não encontrado",
     406: "Há campos inválidos",
     500: "Erro no servidor, tente novamente mais tarde.",

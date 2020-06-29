@@ -42,4 +42,5 @@ export default () => ({
       searchPlaceholder: "Pesquisar",
     },
   },
+  style: { width: "100%", maxWidth: "900px" },
 });

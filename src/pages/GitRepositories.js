@@ -8,8 +8,8 @@ import {
   getRepoOpenPullRequests,
   saveRepository,
 } from "../services";
-import styles from "../assets/css/git.css";
-import { Save, Search } from "@material-ui/icons";
+import styles from "../assets/css/pages.css";
+import { Save, Search, HourglassEmpty } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 import {
   AppBar,
@@ -29,6 +29,8 @@ class GitRepositories extends Component {
     nameNotFilled: false,
     repo: [],
     errorMessage: "",
+    successMessage: "",
+    loadingSave: false
   };
 
   async searchRepo(e) {
@@ -128,11 +130,13 @@ class GitRepositories extends Component {
       pullRequests: openPR,
     };
     const res = await saveRepository(repository);
-    console.log(res);
+    res.message
+      ? this.setState({ loadingSave: false, errorMessage: res.message })
+      : this.setState({ loadingSave: false, successMessage: "Repositório salvo com sucesso!" });
   }
 
   table() {
-    const { repo, showName } = this.state;
+    const { repo, showName, loadingSave } = this.state;
     return (
       <MaterialTable
         {...tableDefaults()}
@@ -141,18 +145,21 @@ class GitRepositories extends Component {
         data={repo}
         actions={[
           {
-            icon: Save,
+            icon: loadingSave? HourglassEmpty : Save,
             tooltip: "Salvar repositório",
-            onClick: async (evt, rowData) => this.saveRepo(rowData),
+            onClick: async (evt, rowData) => {
+              this.setState({ loadingSave: true })
+              this.saveRepo(rowData)
+            },
           },
         ]}
-        style={{ width: "100%", maxWidth: "900px" }}
       />
     );
   }
 
   render() {
-    const { repo, errorMessage } = this.state;
+    const { repo } = this.state;
+    const { errorMessage, successMessage } = this.state;
     return (
       <>
         {this.searchBar()}
@@ -165,18 +172,30 @@ class GitRepositories extends Component {
             this.table()
           )}
         </Box>
-        <Snackbar
-          open={errorMessage !== ""}
-          autoHideDuration={6000}
+      <Snackbar
+        open={errorMessage !== ""}
+        autoHideDuration={6000}
+        onClose={() => this.setState({ errorMessage: "" })}
+      >
+        <Alert
           onClose={() => this.setState({ errorMessage: "" })}
+          severity="error"
         >
-          <Alert
-            onClose={() => this.setState({ errorMessage: "" })}
-            severity="error"
-          >
-            {errorMessage}
-          </Alert>
-        </Snackbar>
+          {errorMessage}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={successMessage !== ""}
+        autoHideDuration={6000}
+        onClose={() => this.setState({ successMessage: "" })}
+      >
+        <Alert
+          onClose={() => this.setState({ successMessage: "" })}
+          severity="success"
+        >
+          {successMessage}
+        </Alert>
+      </Snackbar>
       </>
     );
   }
