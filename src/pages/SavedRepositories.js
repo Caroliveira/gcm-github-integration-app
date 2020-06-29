@@ -4,18 +4,25 @@ import tableDefaults from "../utils/tableDefaults";
 import styles from "../assets/css/pages.css";
 import { getRepositories } from "../services";
 import { Alert } from "@material-ui/lab";
-import { Box, Snackbar, withStyles } from "@material-ui/core";
+import { Box, Snackbar, LinearProgress, withStyles } from "@material-ui/core";
 
 class SavedRepositories extends Component {
-  state = {
-    repositories: [],
-    errorMessage: "",
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      repositories: [],
+      errorMessage: "",
+      loadingTable: true,
+    };
+  }
   async componentDidMount() {
     const repositories = await getRepositories();
     repositories.message
-      ? this.setState({ errorMessage: repositories.message })
-      : this.setState({ repositories: repositories });
+      ? this.setState({
+          errorMessage: repositories.message,
+          loadingTable: false,
+        })
+      : this.setState({ repositories: repositories, loadingTable: false });
   }
   table() {
     const { repositories } = this.state;
@@ -29,19 +36,25 @@ class SavedRepositories extends Component {
     );
   }
   render() {
-    const { errorMessage, repositories } = this.state;
+    const { errorMessage, repositories, loadingTable } = this.state;
     return (
       <>
-        <Box display="flex" justifyContent="center" className="sim">
-          {repositories.length === 0 ? (
-            <p className="main-text">
-              Não há repositórios salvos =C
-            </p>
-          ) : (
-            this.table()
-          )}
-        </Box>
-        <Snackbar
+        {loadingTable ? (
+          <LinearProgress />
+        ) : (
+          <Box display="flex" justifyContent="center" className="sim">
+            {repositories.length === 0 ? (
+              <p className="main-text">
+                {errorMessage === ""
+                  ? "Não há repositórios salvos =C"
+                  : errorMessage}
+              </p>
+            ) : (
+              this.table()
+            )}
+          </Box>
+        )}
+        {/* <Snackbar
           open={errorMessage !== ""}
           autoHideDuration={6000}
           onClose={() => this.setState({ errorMessage: "" })}
@@ -52,10 +65,10 @@ class SavedRepositories extends Component {
           >
             {errorMessage}
           </Alert>
-        </Snackbar>
+        </Snackbar> */}
       </>
     );
   }
 }
 
-export default withStyles(styles)(SavedRepositories)
+export default withStyles(styles)(SavedRepositories);

@@ -19,6 +19,7 @@ import {
   Snackbar,
   withStyles,
   IconButton,
+  LinearProgress,
 } from "@material-ui/core";
 
 class GitRepositories extends Component {
@@ -30,7 +31,8 @@ class GitRepositories extends Component {
     repo: [],
     errorMessage: "",
     successMessage: "",
-    loadingSave: false
+    loadingSave: false,
+    loadingTable: false,
   };
 
   async searchRepo(e) {
@@ -44,6 +46,7 @@ class GitRepositories extends Component {
         ? this.setState({ errorMessage: repo.message })
         : this.setState({ repo: repo, showName: name });
     }
+    this.setState({ loadingTable: false });
   }
 
   searchBar() {
@@ -97,7 +100,13 @@ class GitRepositories extends Component {
               />
             </Grid>
             <Grid item>
-              <IconButton type="submit" onClick={(e) => this.searchRepo(e)}>
+              <IconButton
+                type="submit"
+                onClick={(e) => {
+                  this.setState({ loadingTable: true });
+                  this.searchRepo(e);
+                }}
+              >
                 <Search />
               </IconButton>
             </Grid>
@@ -132,7 +141,10 @@ class GitRepositories extends Component {
     const res = await saveRepository(repository);
     res.message
       ? this.setState({ loadingSave: false, errorMessage: res.message })
-      : this.setState({ loadingSave: false, successMessage: "Repositório salvo com sucesso!" });
+      : this.setState({
+          loadingSave: false,
+          successMessage: "Repositório salvo com sucesso!",
+        });
   }
 
   table() {
@@ -145,11 +157,11 @@ class GitRepositories extends Component {
         data={repo}
         actions={[
           {
-            icon: loadingSave? HourglassEmpty : Save,
+            icon: loadingSave ? HourglassEmpty : Save,
             tooltip: "Salvar repositório",
             onClick: async (evt, rowData) => {
-              this.setState({ loadingSave: true })
-              this.saveRepo(rowData)
+              this.setState({ loadingSave: true });
+              this.saveRepo(rowData);
             },
           },
         ]}
@@ -158,44 +170,47 @@ class GitRepositories extends Component {
   }
 
   render() {
-    const { repo } = this.state;
-    const { errorMessage, successMessage } = this.state;
+    const { errorMessage, successMessage, repo, loadingTable } = this.state;
     return (
       <>
         {this.searchBar()}
-        <Box display="flex" justifyContent="center" className="sim">
-          {repo.length === 0 ? (
-            <p className="main-text">
-              Digite o nome do usuário ou organização para continuar.
-            </p>
-          ) : (
-            this.table()
-          )}
-        </Box>
-      <Snackbar
-        open={errorMessage !== ""}
-        autoHideDuration={6000}
-        onClose={() => this.setState({ errorMessage: "" })}
-      >
-        <Alert
+        {loadingTable ? (
+          <LinearProgress />
+        ) : (
+          <Box display="flex" justifyContent="center" className="sim">
+            {repo.length === 0 ? (
+              <p className="main-text">
+                Digite o nome do usuário ou organização para continuar.
+              </p>
+            ) : (
+              this.table()
+            )}
+          </Box>
+        )}
+        <Snackbar
+          open={errorMessage !== ""}
+          autoHideDuration={6000}
           onClose={() => this.setState({ errorMessage: "" })}
-          severity="error"
         >
-          {errorMessage}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={successMessage !== ""}
-        autoHideDuration={6000}
-        onClose={() => this.setState({ successMessage: "" })}
-      >
-        <Alert
+          <Alert
+            onClose={() => this.setState({ errorMessage: "" })}
+            severity="error"
+          >
+            {errorMessage}
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={successMessage !== ""}
+          autoHideDuration={6000}
           onClose={() => this.setState({ successMessage: "" })}
-          severity="success"
         >
-          {successMessage}
-        </Alert>
-      </Snackbar>
+          <Alert
+            onClose={() => this.setState({ successMessage: "" })}
+            severity="success"
+          >
+            {successMessage}
+          </Alert>
+        </Snackbar>
       </>
     );
   }
