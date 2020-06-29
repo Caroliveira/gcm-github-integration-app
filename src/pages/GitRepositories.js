@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import MaterialTable from "material-table";
 import tableDefaults from "../utils/tableDefaults";
-import { getOrgRepo, getUserRepo } from "../services";
+import {
+  getOrgRepo,
+  getUserRepo,
+  getRepoContributors,
+  getRepoOpenPullRequests,
+  saveRepository,
+} from "../services";
 import styles from "../assets/css/git.css";
 import { Save, Search } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
@@ -32,9 +38,9 @@ class GitRepositories extends Component {
     else {
       const repo =
         type === "user" ? await getUserRepo(name) : await getOrgRepo(name);
-      repo.data
-        ? this.setState({ repo: repo.data, showName: name })
-        : this.setState({ errorMessage: repo.message });
+      repo.message
+        ? this.setState({ errorMessage: repo.message })
+        : this.setState({ repo: repo, showName: name });
     }
   }
 
@@ -99,21 +105,45 @@ class GitRepositories extends Component {
     );
   }
 
+  async saveRepo(repo) {
+    const { showName } = this.state;
+    const rawContributors = await getRepoContributors(showName, repo.name);
+    const rawOpenPR = await getRepoOpenPullRequests(showName, repo.name);
+    const contributors = rawContributors.map((el) => ({
+      login: el.login,
+      url: el.html_url,
+      contributions: el.contributions,
+    }));
+    const firstsOpenPR = rawOpenPR.slice(0, 3);
+    const openPR = firstsOpenPR.map((el) => ({
+      title: el.title,
+      url: el.html_url,
+      responsable: el.user.login,
+    }));
+    const repository = {
+      name: showName,
+      url: repo.html_url,
+      language: repo.language,
+      contributors: contributors,
+      pullRequests: openPR,
+    };
+    const res = await saveRepository(repository);
+    console.log(res);
+  }
+
   table() {
     const { repo, showName } = this.state;
     return (
       <MaterialTable
         {...tableDefaults()}
         title={`Repositórios de ${showName}`}
-        columns={[
-          { title: "Nome", field: "name" },
-        ]}
+        columns={[{ title: "Nome", field: "name" }]}
         data={repo}
         actions={[
           {
             icon: Save,
             tooltip: "Salvar repositório",
-            // onClick: async (evt, rowData) =>
+            onClick: async (evt, rowData) => this.saveRepo(rowData),
           },
         ]}
         style={{ width: "100%", maxWidth: "900px" }}

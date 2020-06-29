@@ -6,14 +6,11 @@ export async function getUserRepo(user) {
     const res = await axios.get(`${base}/users/${user}/repos`, {
       headers: { Accept: "application/vnd.github.nebula-preview+json" },
     });
-    return {
-      status: res.status,
-      data: res.data
-    };
+    return res.data;
   } catch (error) {
     return {
       status: error.response.status,
-      message: errorHandler(error.response.status)
+      message: errorHandler(error.response.status),
     };
   }
 }
@@ -23,14 +20,39 @@ export async function getOrgRepo(org) {
     const res = await axios.get(`${base}/orgs/${org}/repos`, {
       headers: { Accept: "application/vnd.github.nebula-preview+json" },
     });
-    return {
-      status: res.status,
-      data: res.data
-    };
+    return res.data;
   } catch (error) {
     return {
       status: error.response.status,
-      message: errorHandler(error.response.status)
+      message: errorHandler(error.response.status),
+    };
+  }
+}
+
+export async function getRepoContributors(owner, repo) {
+  try {
+    const res = await axios.get(`${base}/repos/${owner}/${repo}/contributors`, {
+      headers: { Accept: "application/vnd.github.nebula-preview+json" },
+    });
+    return res.data;
+  } catch (error) {
+    return {
+      status: error.response.status,
+      message: errorHandler(error.response.status),
+    };
+  }
+}
+
+export async function getRepoOpenPullRequests(owner, repo) {
+  try {
+    const res = await axios.get(`${base}/repos/${owner}/${repo}/pulls`, {
+      headers: { Accept: "application/vnd.github.sailor-v-preview+json" },
+    });
+    return res.data;
+  } catch (error) {
+    return {
+      status: error.response.status,
+      message: errorHandler(error.response.status),
     };
   }
 }
@@ -41,7 +63,7 @@ function errorHandler(err) {
     403: "Proibido",
     404: "Não encontrado",
     406: "Há campos inválidos",
-    500: "Erro no servidor, tente novamente mais tarde."
-  }
+    500: "Erro no servidor, tente novamente mais tarde.",
+  };
   return errors[err] === undefined ? errors[500] : errors[err];
 }
