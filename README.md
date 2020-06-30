@@ -17,6 +17,9 @@ Para rodar esse programa é necessário:
 ## Instalação
 
 Após clonar, ou fazer o download, deste projeto, abrir o terminal na pasta do projeto e digitar os seguintes comandos:
+
 ↦ npm install
+
 ↦ npm start
+
 Em seguida, abra o navegador na seguinte URL para ver o resultado: http://localhost:3000.
