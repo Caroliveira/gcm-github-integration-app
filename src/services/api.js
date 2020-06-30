@@ -20,7 +20,21 @@ export async function saveRepository(repo) {
     const res = await axios.post(`${base}/repositories`, repo, {
       headers: { Accept: "application/json" },
     });
-    return res.status? errorHandler(res.status) : res.data;
+    return res.status ? errorHandler(res.status) : res.data;
+  } catch (error) {
+    return {
+      status: error.response.status,
+      message: errorHandler(error.response.status),
+    };
+  }
+}
+
+export async function deleteRepository(id) {
+  try {
+    const res = await axios.delete(`${base}/repositories/${id}`, {
+      headers: { Accept: "application/json" },
+    });
+    return res.status ? errorHandler(res.status) : res.data;
   } catch (error) {
     return {
       status: error.response.status,

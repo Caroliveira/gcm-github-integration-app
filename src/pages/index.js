@@ -17,8 +17,8 @@ class Home extends Component {
             onChange={(e, vl) => this.setState({ selected: vl })}
             centered
           >
-            <Tab value="Git" id="Git" label="Git Repositories" />
-            <Tab value="Saved" id="Saved" label="Saved Repositories" />
+            <Tab value="Git" id="Git" label="GitHub" />
+            <Tab value="Saved" id="Saved" label="Salvos" />
           </Tabs>
         </AppBar>
         {selected === "Git" ? <GitRepositories /> : <SavedRepositories />}

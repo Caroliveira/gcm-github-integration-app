@@ -1,0 +1,21 @@
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog {
+  /* max-width: 1200px;
+  width: 100%; */
+}
+
+.warning-text {
+  max-width: 600px;
+  font-family: "Press Start 2P", cursive;
+  font-size: 18px;
+  line-height: 30px;
+}
+
+.card-list {
+  margin-bottom: 15px;
+}

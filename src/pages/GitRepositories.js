@@ -9,14 +9,13 @@ import {
   saveRepository,
 } from "../services";
 import styles from "../assets/css/pages.css";
+import Snackbar from "../components/Snackbar";
 import { Save, Search, HourglassEmpty } from "@material-ui/icons";
-import { Alert } from "@material-ui/lab";
 import {
   AppBar,
   Box,
   Grid,
   TextField,
-  Snackbar,
   withStyles,
   IconButton,
   LinearProgress,
@@ -63,25 +62,6 @@ class GitRepositories extends Component {
           >
             <Grid item>
               <TextField
-                select
-                fullWidth
-                label="Tipo"
-                value={type}
-                onChange={(evt) => this.setState({ type: evt.target.value })}
-                SelectProps={{ native: true }}
-                variant="outlined"
-                size="small"
-              >
-                <option key="user" value="user">
-                  Usuário
-                </option>
-                <option key="org" value="org">
-                  Organização
-                </option>
-              </TextField>
-            </Grid>
-            <Grid item>
-              <TextField
                 fullWidth
                 variant="outlined"
                 size="small"
@@ -98,6 +78,25 @@ class GitRepositories extends Component {
                   })
                 }
               />
+            </Grid>
+            <Grid item>
+              <TextField
+                select
+                fullWidth
+                label="Tipo"
+                value={type}
+                onChange={(evt) => this.setState({ type: evt.target.value })}
+                SelectProps={{ native: true }}
+                variant="outlined"
+                size="small"
+              >
+                <option key="user" value="user">
+                  Usuário
+                </option>
+                <option key="org" value="org">
+                  Organização
+                </option>
+              </TextField>
             </Grid>
             <Grid item>
               <IconButton
@@ -132,7 +131,8 @@ class GitRepositories extends Component {
       responsable: el.user.login,
     }));
     const repository = {
-      name: showName,
+      name: repo.name,
+      owner: showName,
       url: repo.html_url,
       language: repo.language,
       contributors: contributors,
@@ -153,7 +153,11 @@ class GitRepositories extends Component {
       <MaterialTable
         {...tableDefaults()}
         title={`Repositórios de ${showName}`}
-        columns={[{ title: "Nome", field: "name" }]}
+        columns={[
+          { title: "Nome", field: "name" },
+          { title: "URL", field: "html_url" },
+          { title: "Linguagem", field: "language" },
+        ]}
         data={repo}
         actions={[
           {
@@ -188,29 +192,15 @@ class GitRepositories extends Component {
           </Box>
         )}
         <Snackbar
-          open={errorMessage !== ""}
-          autoHideDuration={6000}
+          message={errorMessage}
           onClose={() => this.setState({ errorMessage: "" })}
-        >
-          <Alert
-            onClose={() => this.setState({ errorMessage: "" })}
-            severity="error"
-          >
-            {errorMessage}
-          </Alert>
-        </Snackbar>
+          type="error"
+        />
         <Snackbar
-          open={successMessage !== ""}
-          autoHideDuration={6000}
+          message={successMessage}
           onClose={() => this.setState({ successMessage: "" })}
-        >
-          <Alert
-            onClose={() => this.setState({ successMessage: "" })}
-            severity="success"
-          >
-            {successMessage}
-          </Alert>
-        </Snackbar>
+          type="success"
+        />
       </>
     );
   }
