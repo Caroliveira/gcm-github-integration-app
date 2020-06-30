@@ -24,13 +24,12 @@ class SavedRepositories extends Component {
       repositories: [],
       errorMessage: "",
       loadingTable: true,
-      loadingDelete: false,
       deleteError: "",
       deleteSuccess: "",
       confirmDelete: false,
       repository: "",
       contributorsModal: false,
-      pullRequestsDialog: false
+      pullRequestsDialog: false,
     };
   }
 
@@ -47,10 +46,9 @@ class SavedRepositories extends Component {
   async deleteRepo(id) {
     const res = await deleteRepository(id);
     if (res.message) {
-      this.setState({ loadingDelete: false, deleteError: res.message });
+      this.setState({ deleteError: res.message });
     } else {
       this.setState({
-        loadingDelete: false,
         loadingTable: true,
         deleteSuccess: "Repositório removido com sucesso!",
       });
@@ -109,7 +107,7 @@ class SavedRepositories extends Component {
       confirmDelete,
       repository,
       contributorsModal,
-      pullRequestsDialog
+      pullRequestsDialog,
     } = this.state;
     return (
       <>
@@ -144,7 +142,7 @@ class SavedRepositories extends Component {
             </Button>
             <Button
               onClick={() => {
-                this.setState({ loadingDelete: true, confirmDelete: false });
+                this.setState({ confirmDelete: false });
                 this.deleteRepo(repository._id);
               }}
               color="primary"

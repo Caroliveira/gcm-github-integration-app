@@ -8,7 +8,6 @@ import {
   Card,
   Grid,
   CardContent,
-  Typography,
 } from "@material-ui/core";
 
 class PullRequestsDialog extends Component {
@@ -19,18 +18,12 @@ class PullRequestsDialog extends Component {
       <Card className="card-list">
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item>
-              <Typography>Título</Typography>
-            </Grid>
-            <Grid item>{el.title}</Grid>
-            <Grid item>
-              <Typography>Responsável</Typography>
-            </Grid>
-            <Grid item>{el.responsable}</Grid>
-            <Grid item>
-              <Typography>URL</Typography>
-            </Grid>
-            <Grid item>{el.url}</Grid>
+            <Grid item sm={12} md={3} className="label">Título:</Grid>
+            <Grid item sm={12} md={9}>{el.title}</Grid>
+            <Grid item sm={12} md={3} className="label">URL:</Grid>
+            <Grid item sm={12} md={9}>{el.url}</Grid>
+            <Grid item sm={3} md={3} className="label">Responsável:</Grid>
+            <Grid item sm={9} md={9}>{el.responsable}</Grid>
           </Grid>
         </CardContent>
       </Card>
@@ -44,7 +37,7 @@ class PullRequestsDialog extends Component {
     return (
       <Dialog className="dialog" open={open} onClose={onClose}>
         {dontExistPR ? null : (
-          <DialogTitle>{`Pull requests do repositório ${repository.name}`}</DialogTitle>
+          <DialogTitle disableTypography className="title">{`Pull requests do repositório ${repository.name}`}</DialogTitle>
         )}
         <DialogContent>
           {dontExistPR ? (

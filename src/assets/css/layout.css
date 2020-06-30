@@ -10,6 +10,10 @@
   width: 300px;
 }
 
+.content {
+  margin-bottom: 80px;
+}
+
 .footer {
   width: 100%;
   bottom: 0;

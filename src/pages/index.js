@@ -21,7 +21,9 @@ class Home extends Component {
             <Tab value="Saved" id="Saved" label="Salvos" />
           </Tabs>
         </AppBar>
-        {selected === "Git" ? <GitRepositories /> : <SavedRepositories />}
+        <div className="content">
+          {selected === "Git" ? <GitRepositories /> : <SavedRepositories />}
+        </div>
         <footer className="footer">
           Desenvolvido por
           <a href="https://caroliveira.herokuapp.com/">

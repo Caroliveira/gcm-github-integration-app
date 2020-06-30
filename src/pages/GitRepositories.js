@@ -30,7 +30,6 @@ class GitRepositories extends Component {
     repo: [],
     errorMessage: "",
     successMessage: "",
-    loadingSave: false,
     loadingTable: false,
   };
 
@@ -140,15 +139,14 @@ class GitRepositories extends Component {
     };
     const res = await saveRepository(repository);
     res.message
-      ? this.setState({ loadingSave: false, errorMessage: res.message })
+      ? this.setState({ errorMessage: res.message })
       : this.setState({
-          loadingSave: false,
           successMessage: "Repositório salvo com sucesso!",
         });
   }
 
   table() {
-    const { repo, showName, loadingSave } = this.state;
+    const { repo, showName } = this.state;
     return (
       <MaterialTable
         {...tableDefaults()}
@@ -161,10 +159,9 @@ class GitRepositories extends Component {
         data={repo}
         actions={[
           {
-            icon: loadingSave ? HourglassEmpty : Save,
+            icon: Save,
             tooltip: "Salvar repositório",
             onClick: async (evt, rowData) => {
-              this.setState({ loadingSave: true });
               this.saveRepo(rowData);
             },
           },
@@ -175,6 +172,7 @@ class GitRepositories extends Component {
 
   render() {
     const { errorMessage, successMessage, repo, loadingTable } = this.state;
+    console.log(successMessage);
     return (
       <>
         {this.searchBar()}
